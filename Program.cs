@@ -80,9 +80,9 @@ namespace simpleCache
                         }
                     }
                     /* "Delete" the item */
-                    this.cache[j] = null;
+                    this.cache[least_frequent_index] = null;
                     /* Cache is full, deleted the least frequent! */
-                    return j;
+                    return least_frequent_index;
                 }
             }
             return i;
