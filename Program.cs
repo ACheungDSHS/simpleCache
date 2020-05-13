@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualBasic;
+using Microsoft.VisualBasic;
 using System;
 using System.Net;
 using System.Runtime.ConstrainedExecution;
@@ -64,10 +64,10 @@ namespace simpleCache
             int i = 0, j;
             /* 1>>30 is a Very Big Number */
             int lowest_frequency = 1>>30, least_frequent_index = -1;
-
+            
 
             while (this.cache[i] != null)
-            {
+            {   
                 i++;
                 if (i == this.length)
                 {
@@ -82,7 +82,7 @@ namespace simpleCache
                     /* "Delete" the item */
                     this.cache[least_frequent_index] = null;
                     /* Cache is full, deleted the least frequent! */
-                    return least_frequent_index;
+                    return least_frequent_index; 
                 }
             }
             return i;
@@ -99,7 +99,7 @@ namespace simpleCache
             this.location = location;
             this.accessed = 0;
         }
-
+        
         public string getData()
         {
             if (this.data != null)
@@ -130,26 +130,45 @@ namespace simpleCache
         {
             Console.WriteLine(DateTime.Now + " " + msg);
         }
-
+        /* Outputs the current timestamp so the user can compare the speeds */
         static void Main(string[] args)
         {
             DownloadCache cache = new DownloadCache(2);
-            int first, second;
+            int first, second, counter1, counter2;
+
+            counter1 = 0;
+            counter2 = 0;
 
             timestamp("About to make the cache");
             first = cache.nextFree();
             cache.setCache(first, "https://people.freebsd.org/~crees/removed_ports/index.xml");
             timestamp("Cache made, now let's try to access it and get the first thirty characters...");
             Console.WriteLine(cache.getCache(first).Substring(0, 30));
+            counter1 += 1; /* Counter will count how many times getCache has been used */       
             timestamp("Let's try again...");
             Console.WriteLine(cache.getCache(first).Substring(0, 30));
+            counter1 += 1;
             timestamp("Woah, that was quicker!");
+
             second = cache.nextFree();
             cache.setCache(second, "another_slow_url");
+            Console.WriteLine(cache.getCache(second).Substring(0, 30)); 
+            counter2 += 1;
             Console.WriteLine(cache.getCache(second).Substring(0, 30));
+            counter2 += 1;
             Console.WriteLine(cache.getCache(second).Substring(0, 30));
+            counter2 += 1;
             Console.WriteLine(cache.getCache(second).Substring(0, 30));
-            Console.WriteLine(cache.getCache(second).Substring(0, 30));
+            counter2 += 1;
+            if (counter1 < counter2);
+            {
+                cache.setCache(first, null);
+            }
+            if (counter2 < counter1);
+            {
+                cache.setCache(second, null); /* Removes the cache item that has the least amount of accesses */
+            }
+            
             /* Find the next free one and see which one has been deleted- which one should be deleted? */
             
         }
